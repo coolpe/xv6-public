@@ -20,7 +20,7 @@ struct run {
 struct {
   struct spinlock lock;
   int use_lock;
-  struct run *freelist;
+  struct run *freelist;//point next unused page order by [4M,0]
 } kmem;
 
 // Initialization happens in two phases.

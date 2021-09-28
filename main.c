@@ -9,6 +9,7 @@
 static void startothers(void);
 static void mpmain(void)  __attribute__((noreturn));
 extern pde_t *kpgdir;
+//kernel.sym 801154a8 end
 extern char end[]; // first address after kernel loaded from ELF file
 
 // Bootstrap processor starts running C code here.
@@ -16,7 +17,7 @@ extern char end[]; // first address after kernel loaded from ELF file
 // doing some setup required for memory allocator to work.
 int
 main(void)
-{
+{//kinit1 (vstart=0x801154a8, vend=0x80400000)
   kinit1(end, P2V(4*1024*1024)); // phys page allocator
   kvmalloc();      // kernel page table
   mpinit();        // detect other processors
@@ -99,6 +100,7 @@ startothers(void)
 // hence the __aligned__ attribute.
 // PTE_PS in a page directory entry enables 4Mbyte pages.
 
+// https://gcc.gnu.org/onlinedocs/gcc/Designated-Inits.html
 __attribute__((__aligned__(PGSIZE)))
 pde_t entrypgdir[NPDENTRIES] = {
   // Map VA's [0, 4MB) to PA's [0, 4MB)

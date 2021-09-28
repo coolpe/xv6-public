@@ -121,6 +121,11 @@ void
 userinit(void)
 {
   struct proc *p;
+  //$(LD) $(LDFLAGS) -T kernel.ld -o kernel entry.o $(OBJS) -b binary initcode entryother
+  //You can access this binary data inside a program by referencing the special symbols
+  //that are created by the conversion process.
+  //These symbols are called _binary_objfile_start, _binary_objfile_end and _binary_objfile_size. e.g.
+  //you can transform a picture file into an object file and then access it in your code using these symbols.
   extern char _binary_initcode_start[], _binary_initcode_size[];
 
   p = allocproc();

@@ -44,6 +44,10 @@ _start = V2P_WO(entry)
 .globl entry
 entry:
   # Turn on page size extension for 4Mbyte pages
+  #在控制暂存器（control registers）中，有三个和分页功能有关的旗标：
+  #PG（CR0 的bit 31）、PSE（CR4 的bit 4，在Pentium 和以后的处理器才有）、和PAE（CR4 的bit 5，在Pentium Pro 和Pentium II 以后的处理器才有）。
+  #PG（paging）旗标设为1 时，就会开启分页功能。PSE（page size extensions）旗标设为1 时，才可以使用4MB 的分页大小（否则就只能使用4KB 的分页大小）。
+  #而PAE（physical address extension）是P6 家族新增的功能，可以支援到64GB 的实体记忆体（本文中不说明这个功能）。
   movl    %cr4, %eax
   orl     $(CR4_PSE), %eax
   movl    %eax, %cr4

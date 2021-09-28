@@ -102,6 +102,7 @@ mappages(pde_t *pgdir, void *va, uint size, uint pa, int perm)
 
 // This table defines the kernel's mappings, which are present in
 // every process's page table.
+// KERNBASE 之上的页对应的 PTE 中，PTE_U 位均被置 0，因而只有内核能够使用这些页。
 static struct kmap {
   void *virt;
   uint phys_start;
@@ -121,7 +122,7 @@ setupkvm(void)
   pde_t *pgdir;
   struct kmap *k;
 
-  if((pgdir = (pde_t*)kalloc()) == 0)
+  if((pgdir = (pde_t*)kalloc()) == 0)//get a free page  from kmem->freelist
     return 0;
   memset(pgdir, 0, PGSIZE);
   if (P2V(PHYSTOP) > (void*)DEVSPACE)
