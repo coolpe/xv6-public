@@ -89,3 +89,14 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+int
+sys_date(void)
+{
+    int argv_adr;
+
+    if(argint(0, &argv_adr) < 0)
+        return -1;
+    cmostime((struct rtcdate *) argv_adr);
+    return 0;
+}
