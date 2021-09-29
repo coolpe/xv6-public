@@ -130,7 +130,7 @@ static int (*syscalls[])(void) = {
 [SYS_date]    sys_date,
 };
 
-static char* syscall_names[] = {
+/*static char* syscall_names[] = {
 [SYS_fork]    "sys_fork",
 [SYS_exit]    "sys_exit",
 [SYS_wait]    "sys_wait",
@@ -153,7 +153,7 @@ static char* syscall_names[] = {
 [SYS_mkdir]   "sys_mkdir",
 [SYS_close]   "sys_close",
 [SYS_date]    "sys_date",
-};
+};*/
 
 void
 syscall(void)
