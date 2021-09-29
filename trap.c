@@ -85,19 +85,17 @@ trap(struct trapframe *tf)
           mem = kalloc();
           if(mem == 0){
               cprintf("allocuvm out of memory\n");
-              lapiceoi();
               break;
           }
           memset(mem, 0, PGSIZE);
           if(mappages(myproc()->pgdir, (char*)a, PGSIZE, V2P(mem), PTE_W|PTE_U) < 0){
               cprintf("allocuvm out of memory (2)\n");
               kfree(mem);
-              lapiceoi();
               break;
           }
-          lapiceoi();
-          break;
       }
+      lapiceoi();
+      break;
   //PAGEBREAK: 13
   default:
     if(myproc() == 0 || (tf->cs&3) == 0){
