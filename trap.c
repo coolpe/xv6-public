@@ -31,7 +31,9 @@ idtinit(void)
 {
   lidt(idt, sizeof(idt));
 }
-
+int mappages(pde_t *pgdir, void *va, uint size, uint pa, int perm);
+char *mem;
+uint a;
 //PAGEBREAK: 41
 void
 trap(struct trapframe *tf)
@@ -77,7 +79,21 @@ trap(struct trapframe *tf)
             cpuid(), tf->cs, tf->eip);
     lapiceoi();
     break;
-
+  case T_PGFLT:
+      a = PGROUNDDOWN(rcr2());
+      for(; a < myproc()->sz; a += PGSIZE){
+          mem = kalloc();
+          if(mem == 0){
+              cprintf("allocuvm out of memory\n");
+              break;
+          }
+          memset(mem, 0, PGSIZE);
+          if(mappages(myproc()->pgdir, (char*)a, PGSIZE, V2P(mem), PTE_W|PTE_U) < 0){
+              cprintf("allocuvm out of memory (2)\n");
+              kfree(mem);
+              break;
+          }
+          break;
   //PAGEBREAK: 13
   default:
     if(myproc() == 0 || (tf->cs&3) == 0){
@@ -86,6 +102,7 @@ trap(struct trapframe *tf)
               tf->trapno, cpuid(), tf->eip, rcr2());
       panic("trap");
     }
+
     // In user space, assume process misbehaved.
     cprintf("pid %d %s: trap %d err %d on cpu %d "
             "eip 0x%x addr 0x%x--kill proc\n",
