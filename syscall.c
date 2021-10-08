@@ -187,5 +187,7 @@ sys_alarm(void)
         return -1;
     myproc()->alarmticks = ticks;
     myproc()->alarmhandler = handler;
+    cprintf("alarmticks: %d\n",ticks);
+
     return 0;
 }
