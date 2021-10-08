@@ -61,7 +61,10 @@ trap(struct trapframe *tf)
               entry = (void(*)())(myproc()->alarmhandler);
               entry();
               myproc()->nticks = 0;
+              cprintf("tick-------------\n");
           } else{
+              cprintf("tick.............\n");
+
               myproc()->nticks += 1;
           }
       }
