@@ -55,6 +55,16 @@ trap(struct trapframe *tf)
       ticks++;
       wakeup(&ticks);
       release(&tickslock);
+      if(myproc() != 0 && (tf->cs & 3) == 3 && myproc()->alarmticks!=0){
+          if (myproc()->nticks >= myproc()->alarmticks) {
+              void (*entry)(void);
+              entry = (void(*)(void))(myproc()->alarmhandler);
+              entry();
+              myproc()->nticks = 0;
+          } else{
+              myproc()->nticks += 1;
+          }
+      }
     }
     lapiceoi();
     break;
@@ -79,6 +89,11 @@ trap(struct trapframe *tf)
             cpuid(), tf->cs, tf->eip);
     lapiceoi();
     break;
+    /*
+     * page fault 其实是属于 Exception，而且是 Faults 类型的 Exception，这种类型的 Exception，eip 是指向当前行，
+     * 原因是这种异常是可以恢复的，恢复后应该继续尝试刚才出错的指令。比如 page fault 后，kernel 进行 lazy allocation，完成后应该继续执行刚才那条 page fault 的指令，
+     * 按上面的例子，就是完成 hp->s.size = nu 赋值操作。
+     */
   case T_PGFLT:
       a = PGROUNDDOWN(rcr2());
       for(; a < myproc()->sz; a += PGSIZE){
