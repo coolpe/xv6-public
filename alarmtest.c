@@ -10,7 +10,7 @@ main(int argc, char *argv[])
     long long i;
     printf(1, "alarmtest starting\n");
     alarm(10, periodic);
-    for(i = 0; i < 25*500000000; i++){
+    for(i = 0; i < 25*500000; i++){
         if((i % 250000) == 0)
             write(2, ".", 1);
     }
