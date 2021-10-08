@@ -55,16 +55,14 @@ trap(struct trapframe *tf)
       ticks++;
       wakeup(&ticks);
       release(&tickslock);
-      if(myproc() != 0 && (tf->cs & 3) == 3){
+      if(myproc() != 0 && (tf->cs & 3) == 3 && myproc()->alarmticks){
           if(myproc()->nticks >= myproc()->alarmticks){
-              cprintf("alarmhandler: %d\n",myproc()->alarmhandler);
-              void (*handler)(void);
-              handler = (void(*)())myproc()->alarmhandler;
-              handler();
+              tf->esp -= 4;
+              *(uint*)(tf->esp) = tf->esp;
+              tf->eip = (uint) (myproc()->alarmhandler);
               myproc()->nticks = 0;
           } else{
               myproc()->nticks++;
-              cprintf("alarmticks : %d \n",myproc()->nticks);
           }
       }
     }

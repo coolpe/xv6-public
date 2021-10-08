@@ -100,3 +100,20 @@ sys_date(void)
     cmostime((struct rtcdate *) argv_adr);
     return 0;
 }
+
+
+int
+sys_alarm(void)
+{
+    int ticks;
+    void (*handler)();
+
+    if(argint(0, &ticks) < 0)
+        return -1;
+    if(argptr(1, (char**)&handler, 1) < 0)
+        return -1;
+    myproc()->alarmticks = ticks;
+    myproc()->alarmhandler = handler;
+    handler();
+    return 0;
+}
