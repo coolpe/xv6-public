@@ -50,11 +50,11 @@ struct proc {
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
   int alarmticks;              // alarm interval
-  uint alarmhandler;         // points to the handler function
+  void* alarmhandler;         // points to the handler function
   int nticks;
 };
 
-// Process memory is laid out contiguously, low addresses first:
+// Process memory is lahandlerid out contiguously, low addresses first:
 //   text
 //   original data and bss
 //   fixed-size stack

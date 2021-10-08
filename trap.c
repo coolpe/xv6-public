@@ -57,8 +57,8 @@ trap(struct trapframe *tf)
       release(&tickslock);
       if(myproc() != 0 && (tf->cs & 3) == 3 && myproc()->alarmticks!=0){
           if (myproc()->nticks >= myproc()->alarmticks) {
-              void (*entry)(void);
-              entry = (void(*)(void))(myproc()->alarmhandler);
+              void (*entry)();
+              entry = (void(*)())(myproc()->alarmhandler);
               entry();
               myproc()->nticks = 0;
           } else{
