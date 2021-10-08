@@ -50,7 +50,7 @@ struct proc {
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
   int alarmticks;              // alarm interval
-  void *alarmhandler;         // points to the handler function
+  int alarmhandler;         // points to the handler function
   int nticks;
 };
 
