@@ -56,14 +56,17 @@ trap(struct trapframe *tf)
       wakeup(&ticks);
       release(&tickslock);
       if(myproc() != 0 && (tf->cs & 3) == 3){
-          if (myproc()->nticks >= myproc()->alarmticks) {
-              void (*entry)();
-              entry = (void(*)())(myproc()->alarmhandler);
-              entry();
-              myproc()->nticks = 0;
-          } else{
-              myproc()->nticks++;
-          }
+//          if (myproc()->nticks >= myproc()->alarmticks) {
+//              void (*entry)();
+//              entry = (void(*)())(myproc()->alarmhandler);
+//              entry();
+//              myproc()->nticks = 0;
+//          } else{
+//              myproc()->nticks++;
+//          }
+          void (*entry)();
+          entry = (void(*)())(myproc()->alarmhandler);
+          entry();
       }
     }
     lapiceoi();
