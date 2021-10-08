@@ -7,7 +7,7 @@ void periodic();
 int
 main(int argc, char *argv[])
 {
-    long long i;
+    int i;
     printf(1, "alarmtest starting\n");
     alarm(10, periodic);
     for(i = 0; i < 25*500000; i++){
