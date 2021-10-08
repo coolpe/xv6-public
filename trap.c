@@ -57,12 +57,14 @@ trap(struct trapframe *tf)
       release(&tickslock);
       if(myproc() != 0 && (tf->cs & 3) == 3){
           if(myproc()->nticks >= myproc()->alarmticks){
-              cprintf("exec alarm\n");
+              cprintf("alarmhandler: %d\n",myproc()->alarmhandler);
+              void (*handler)(void);
+              handler = (void(*)())myproc()->alarmhandler;
+              handler();
               myproc()->nticks = 0;
           } else{
               myproc()->nticks++;
               cprintf("alarmticks : %d \n",myproc()->nticks);
-
           }
       }
     }
