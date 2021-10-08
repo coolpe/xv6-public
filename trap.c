@@ -55,7 +55,7 @@ trap(struct trapframe *tf)
       ticks++;
       wakeup(&ticks);
       release(&tickslock);
-      /*if(myproc() != 0 && (tf->cs & 3) == 3 && myproc()->alarmticks!=0){
+      if(myproc() != 0 && (tf->cs & 3) == 3){
           if (myproc()->nticks >= myproc()->alarmticks) {
               void (*entry)();
               entry = (void(*)())(myproc()->alarmhandler);
@@ -64,9 +64,7 @@ trap(struct trapframe *tf)
           } else{
               myproc()->nticks += 1;
           }
-      }*/
-      cprintf("T_IRQ0 + IRQ_TIMER\n",ticks);
-
+      }
     }
     lapiceoi();
     break;
