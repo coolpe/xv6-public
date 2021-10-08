@@ -179,14 +179,15 @@ int
 sys_alarm(void)
 {
     int ticks;
-    int handler;
+    void (*handler)();
 
     if(argint(0, &ticks) < 0)
         return -1;
-    if(argint(1, &handler) < 0)
+    if(argptr(1, (char**)&handler, 1) < 0)
         return -1;
     myproc()->alarmticks = ticks;
     myproc()->alarmhandler = handler;
-
+    handler = (void (*)())handler;
+    handler();
     return 0;
 }
