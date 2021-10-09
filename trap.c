@@ -55,14 +55,21 @@ trap(struct trapframe *tf)
       ticks++;
       wakeup(&ticks);
       release(&tickslock);
-      if(myproc() != 0 && (tf->cs & 3) == 3 && myproc()->alarmticks){
-          if(myproc()->nticks >= myproc()->alarmticks){
-              tf->esp -= 4;
-              *(uint*)(tf->esp) = tf->esp;
-              tf->eip = (uint) (myproc()->alarmhandler);
-              myproc()->nticks = 0;
-          } else{
-              myproc()->nticks++;
+      // Homework: xv6 CPU alarm
+      if (myproc() != 0 && (tf->cs & 3) == 3) {
+          // If 1) there's a process running, and
+          //    2) the interrupt came from userspace
+          if (myproc()->alarmticks) { // Make sure alarm is set
+              myproc()->alarmticksleft--;
+              if (myproc()->alarmticksleft == 0) {
+                  // decrement user esp
+                  tf->esp -= 4;
+                  // push user eip onto user stack
+                  *(uint*)(tf->esp) = tf->eip;
+                  // change user eip to handler
+                  tf->eip = (uint)(myproc()->alarmhandler);
+                  myproc()->alarmticksleft = myproc()->alarmticks;
+              }
           }
       }
     }

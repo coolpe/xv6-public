@@ -51,7 +51,7 @@ struct proc {
   char name[16];               // Process name (debugging)
   int alarmticks;              // alarm interval
   void (*alarmhandler)();         // points to the handler function
-  int nticks;
+  int alarmticksleft;
 };
 
 // Process memory is lahandlerid out contiguously, low addresses first:
